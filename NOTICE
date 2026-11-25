@@ -1,0 +1,15 @@
+hdr10pg
+Copyright 2026 hendy643
+
+This product includes software developed by hendy643.
+Licensed under the Apache License, Version 2.0 (see LICENSE).
+
+Third-party software
+--------------------
+The build downloads the following. They are not covered by this project's license and remain under their
+own terms, found in the downloaded sources under build/_deps/:
+
+- NVIDIA NVAPI, Copyright NVIDIA Corporation & Affiliates
+  https://github.com/NVIDIA/nvapi (see License.txt)
+- Intel Graphics Control Library, Copyright Intel Corporation
+  https://github.com/intel/drivers.gpu.control-library (see License.txt and the notices in each file)
