@@ -347,12 +347,12 @@ void setTitle(HWND hwnd, const Window& w) {
     SetWindowTextW(hwnd, title);
 }
 
-void run(const Display* display, std::optional<FullscreenImage> image) {
+int run(HINSTANCE instance, int showCommand, const Display* display, std::optional<FullscreenImage> image) {
     SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
 
     WNDCLASSW windowClass = {};
     windowClass.lpfnWndProc = windowProc;
-    windowClass.hInstance = GetModuleHandleW(nullptr);
+    windowClass.hInstance = instance;
     windowClass.hCursor = LoadCursorW(nullptr, IDC_ARROW);
     windowClass.lpszClassName = L"hdr10pg";
     if (!RegisterClassW(&windowClass)) throw std::runtime_error("RegisterClassW failed");
@@ -384,13 +384,14 @@ void run(const Display* display, std::optional<FullscreenImage> image) {
     if (!finished || !SetConsoleCtrlHandler(onConsoleEvent, TRUE))
         throw std::runtime_error("Cannot install the Ctrl+C handler");
 
-    ShowWindow(hwnd, SW_SHOW);
+    ShowWindow(hwnd, showCommand);
     if (image) toggleFullscreen(hwnd, w);
     w.signal.enable();
     printf(w.signal.on ? "HDR10+ GAMING enabled. Close the window to restore.\n"
                        : "Showing the test screen without the HDR10+ GAMING signal.\n");
     fflush(stdout);
 
+    // The message pump: handle everything queued, then present a frame (or sleep while minimised).
     MSG message = {};
     while (message.message != WM_QUIT) {
         if (PeekMessageW(&message, nullptr, 0, 0, PM_REMOVE)) {
@@ -414,17 +415,18 @@ void run(const Display* display, std::optional<FullscreenImage> image) {
         if (!(image ? renderer.drawGradient(image->pattern, peak) : renderer.draw(w.width, w.height, peak)))
             Sleep(50);
     }
+    return static_cast<int>(message.wParam); // the PostQuitMessage code
 }
 
 } // namespace
 
-int runTestWindow(const Display* display, std::optional<FullscreenImage> image) {
+int runTestWindow(HINSTANCE instance, int showCommand, const Display* display,
+                  std::optional<FullscreenImage> image) {
     // The signal is restored when run() unwinds; only then may a waiting console handler return.
     struct Done {
         ~Done() {
             if (finished) SetEvent(finished);
         }
     } done;
-    run(display, image);
-    return 0;
+    return run(instance, showCommand, display, image);
 }

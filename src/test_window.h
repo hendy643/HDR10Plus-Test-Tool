@@ -15,4 +15,5 @@ struct FullscreenImage {
 // With `image` it starts fullscreen on that gradient instead of the luminance pattern; an 8-bit
 // image never turns the HDR10+ GAMING signal on.
 // Returns a process exit code; throws std::runtime_error if Win32 or D3D12 setup or rendering fails.
-int runTestWindow(const Display* display, std::optional<FullscreenImage> image);
+int runTestWindow(HINSTANCE instance, int showCommand, const Display* display,
+                  std::optional<FullscreenImage> image);

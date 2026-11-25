@@ -18,7 +18,7 @@ FetchContent_Declare(igcl
 FetchContent_MakeAvailable(nvapi igcl)
 
 # cApiWrapper.cpp loads the driver's ControlLib.dll at run time, so no Intel import library is needed.
-add_executable(hdr10pg src/main.cpp src/displays.cpp src/test_window.cpp ${igcl_SOURCE_DIR}/Source/cApiWrapper.cpp)
+add_executable(hdr10pg WIN32 src/main.cpp src/displays.cpp src/test_window.cpp ${igcl_SOURCE_DIR}/Source/cApiWrapper.cpp)
 target_include_directories(hdr10pg SYSTEM PRIVATE ${nvapi_SOURCE_DIR} ${igcl_SOURCE_DIR}/include)
 target_link_libraries(hdr10pg PRIVATE ${nvapi_SOURCE_DIR}/amd64/nvapi64.lib d3d12 dxgi user32)
 target_compile_definitions(hdr10pg PRIVATE NOMINMAX UNICODE _UNICODE WIN32_LEAN_AND_MEAN VC_EXTRALEAN)

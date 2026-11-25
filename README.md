@@ -55,6 +55,11 @@ build\Release\hdr10pg.exe            # open the test window
 
 ## Commands
 
+`hdr10pg` is a Windows GUI program. It prints to the terminal it was started from, but PowerShell and
+Command Prompt do not wait for it, so the prompt can appear in the middle of the output. To wait, pipe it in
+PowerShell (`build\Release\hdr10pg.exe detect | Out-Host`) or use `start /wait` in Command Prompt. Started from
+Explorer, it opens the test window with no console, and shows errors in a dialog.
+
 | Command | What it does |
 |---|---|
 | `hdr10pg [display]` | Opens the test window. HDR10+ GAMING is on while it is open, if the display supports it. |
@@ -181,7 +186,7 @@ On NVIDIA the signal also ends if the program is killed. On Intel the setting ca
 | `src/displays.cpp` | Detection and enabling through NVAPI and the Intel library |
 | `src/test_window.cpp` | Win32 window, DirectX 12 swap chain and drawing |
 | `src/pq.h`, `src/test_image.h`, `src/text.h` | PQ curve, test patterns and label font |
-| `src/main.cpp` | Command line and self-test |
+| `src/main.cpp` | `WinMain`, command line and self-test |
 
 A game that reuses this code must follow the [license](#license). It makes the same enabling calls itself; on NVIDIA the mode lasts only as long as the process that set
 it. The game must also output 10-bit PQ in BT.2020 and tone map to the display's declared HDR10+ GAMING
